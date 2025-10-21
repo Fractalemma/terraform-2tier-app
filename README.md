@@ -56,7 +56,7 @@ Notes:
 - 3 Security Groups are needed:
   - For the ALB
   - For the Web Tier (the ASG)
-  - For the App Tier (attached to the RDS deployment)
+  - For the Data Tier (attached to the RDS deployment)
 
 ## Naming conventions
 
