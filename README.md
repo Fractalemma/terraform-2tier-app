@@ -2,27 +2,33 @@
 
 ## Overall description
 
+This is a TF project to provision the infra for a 2-tier architecture/applicaction:
+
+- Web Tier: internet-facing (EC2s behind an ALB)
+- Data Tier: RDS database
+
+To meet the HA (High Availability) requirement both tiers are deployed in two AZs
+
 ### Internet-facing tier (web applicaction)
 
 - Route53:
   - Domain registration:
     - Manual provision
     - Includes a Public Hosted Zone
-  - Alias record:
+  - A Alias record:
     - Points to the Internet Gateway (which is in front of the ALB)
     - Free of cost
-    - Can't set TTL (CNAME can)
-- AMC - AWS Certificate Manager - Puclic certificate:
+- ACM - AWS Certificate Manager - Puclic certificate:
   - Manual provision
-  - Pending approval
+  - Pending approval (not included in the current state -> HTTP traffic)
 - Internet Gateway:
-  - between R53 and ALB
   - At VPC level
+  - Provides internet accesss to NAT gateways
 - Application Load Balancer:
-  - HTTPS listener (if SSL/TLS cert is available):
+  - HTTP listener:
     - Points to the target group
-    - Scurity policy: leave default
-    - Load cert from ACM
+  - HTTPS listener (future implementation when ACM Cert is available):
+    - Points to the target group
 - Auto Scaling Group:
   - Launch Template for EC2s
   - Deploy in two AZs
@@ -42,15 +48,15 @@
 
 Notes:
 
-- Each EC2 (4) has a Security Group and subnet (all private)
-- Everything is inside a private VPC exept for the R53 and ACM resources
-
-## List of resources
-
-- ASG:
-  - Target tracking policy: CPU utiization 66%
-- Launch Template
-- Target group
+- 6 Subnets needed:
+  - 2 Public Subnets for NAT Gateways (pub-sub-a, pub-sub-b)
+  - 2 Private Subnets for Web Tier (pri-sub-web-a, pri-sub-web-b)
+  - 2 Private Subnets for Data Tier (pri-sub-data-a, pri-sub-data-b)
+- Everything is inside a VPC exept for the R53 and ACM resources
+- 3 Security Groups are needed:
+  - For the ALB
+  - For the Web Tier (the ASG)
+  - For the App Tier (attached to the RDS deployment)
 
 ## Naming conventions
 
