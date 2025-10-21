@@ -1,3 +1,11 @@
+module "route53" {
+  source             = "../modules/r53"
+  alb_dns_name       = module.alb.alb_dns_name
+  alb_hosted_zone_id = module.alb.alb_hosted_zone_id
+  sub_domain         = var.sub_domain
+  hosted_zone_name   = var.hosted_zone_name
+}
+
 module "network" {
   source              = "../modules/network"
   region              = var.region
@@ -58,11 +66,4 @@ module "rds" {
   pri_sub_data_b_id = module.network.pri_sub_data_b_id
   db_username       = var.db_username
   db_password       = var.db_password
-}
-
-module "route53" {
-  source             = "../modules/r53"
-  alb_dns_name       = module.alb.alb_dns_name
-  alb_hosted_zone_id = module.alb.alb_hosted_zone_id
-  sub_domain         = var.sub_domain
 }

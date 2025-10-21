@@ -42,3 +42,6 @@ variable "db_password" {
 variable "sub_domain" {
   default = "2tierapp"
 }
+variable "hosted_zone_name" {
+  default = "emmanuelengineering.com"
+}
